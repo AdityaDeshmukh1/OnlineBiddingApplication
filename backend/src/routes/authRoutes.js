@@ -4,9 +4,32 @@ const passport = require('passport');
 const User = require('../models/User');
 const router = express.Router();
 
-router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
-  res.json({ user: req.user });
+// Login Route
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if the email exists in the database
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Check if the provided password matches the stored password
+    if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // You can generate and send a token for authentication here if needed
+
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
+
 
 // Signup Route
 router.post('/signup', async (req, res) => {
