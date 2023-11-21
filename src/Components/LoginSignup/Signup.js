@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import { signupFields } from "./formFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
@@ -19,10 +20,20 @@ export default function Signup(){
     createAccount()
   }
 
-  //handle Signup API Integration here
-  const createAccount=()=>{
+  // handle Signup API Integration here
+  const createAccount = async () => {
+    try {
+      // Make a POST request to your backend API endpoint
+      const response = await axios.post('http://localhost:3000/api/auth/signup', signupState);
 
-  }
+      // Handle success (you can redirect, show a success message, etc.)
+      console.log('Signup successful:', response.data);
+
+    } catch (error) {
+      // Handle errors (you can show an error message, log the error, etc.)
+      console.error('Signup error:', error.response.data.message);
+    }
+  };
 
     return(
         <form className="mt-3 space-y-6 min-w-[270px] w-[50vw] max-w-[500px]" onSubmit={handleSubmit}>
